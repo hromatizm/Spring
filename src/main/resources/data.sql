@@ -1,5 +1,5 @@
 insert into PERSON (ID, FULL_NAME, TITLE, AGE)
-values (1001, 'default uer', 'reader', 55);
+values (1001, 'default user', 'reader', 55);
 
 insert into BOOK (ID, TITLE, AUTHOR, PAGE_COUNT, USER_ID)
 values (2002, 'default book', 'author', 5500, 1001);

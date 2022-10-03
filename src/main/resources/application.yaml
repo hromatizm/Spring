@@ -1,7 +1,12 @@
 swagger-api:
   version: "1.0"
 
+
 spring:
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
   h2:
     console:
       enabled: true
