@@ -4,9 +4,9 @@ import com.edu.ulab.app.dto.BookDto;
 import com.edu.ulab.app.exception.NotFoundException;
 import com.edu.ulab.app.mapper.RowToBookDtoMapper;
 import com.edu.ulab.app.service.BookService;
+import com.edu.ulab.app.util.GeneratedKeyHolderFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 
@@ -23,16 +23,19 @@ import java.util.Objects;
 public class BookServiceImplTemplate implements BookService {
 
     private final JdbcTemplate jdbcTemplate;
+    private final GeneratedKeyHolderFactory keyHolderFactory;
 
-    public BookServiceImplTemplate(JdbcTemplate jdbcTemplate) {
+    public BookServiceImplTemplate(JdbcTemplate jdbcTemplate, GeneratedKeyHolderFactory keyHolderFactory) {
         this.jdbcTemplate = jdbcTemplate;
+        this.keyHolderFactory = keyHolderFactory;
     }
 
     @Override
     public BookDto createBook(BookDto bookDto) {
         checkBookDtoForNull(bookDto);
-        final String INSERT_SQL = "INSERT INTO BOOK(TITLE, AUTHOR, PAGE_COUNT, USER_ID) VALUES (?,?,?,?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+        final String INSERT_SQL = "INSERT INTO ULAB_EDU.BOOK(ID, TITLE, AUTHOR, PAGE_COUNT, PERSON_ID) " +
+                "VALUES (nextval('sequence'), ?,?,?,?)";
+        KeyHolder keyHolder = keyHolderFactory.newKeyHolder();
         jdbcTemplate.update(
                 connection -> {
                     PreparedStatement ps =
@@ -54,7 +57,7 @@ public class BookServiceImplTemplate implements BookService {
         checkBookIdForNull(bookId);
         checkBookDtoForNull(bookDto);
 
-        final String UPDATE_SQL = "UPDATE BOOK SET TITLE = ?, AUTHOR = ?, PAGE_COUNT = ?  WHERE ID = ?";
+        final String UPDATE_SQL = "UPDATE ULAB_EDU.BOOK SET TITLE = ?, AUTHOR = ?, PAGE_COUNT = ?  WHERE ID = ?";
         jdbcTemplate.update(
                 connection -> {
                     PreparedStatement ps = connection.prepareStatement(UPDATE_SQL);
@@ -73,7 +76,7 @@ public class BookServiceImplTemplate implements BookService {
     public BookDto getBookById(Long bookId) {
         checkBookIdForNull(bookId);
 
-        final String SELECT_SQL = "SELECT * FROM BOOK WHERE ID = ?";
+        final String SELECT_SQL = "SELECT * FROM ULAB_EDU.BOOK WHERE ID = ?";
         List<BookDto> bookList = jdbcTemplate.query(
                 SELECT_SQL, preparedStatement -> preparedStatement.setLong(1, bookId),
                 new RowToBookDtoMapper());
@@ -89,7 +92,7 @@ public class BookServiceImplTemplate implements BookService {
     public List<BookDto> getBooksByUserId(Long userId) {
         checkUserIdForNull(userId);
 
-        final String SELECT_SQL = "SELECT * FROM BOOK WHERE USER_ID = ?";
+        final String SELECT_SQL = "SELECT * FROM ULAB_EDU.BOOK WHERE PERSON_ID = ?";
         List<BookDto> bookList = jdbcTemplate.query(
                 SELECT_SQL, preparedStatement -> preparedStatement.setLong(1, userId),
                 new RowToBookDtoMapper());
@@ -105,7 +108,7 @@ public class BookServiceImplTemplate implements BookService {
     public void deleteBookById(Long bookId) {
         checkBookIdForNull(bookId);
 
-        final String DELETE_SQL = "DELETE FROM BOOK WHERE ID = ?";
+        final String DELETE_SQL = "DELETE FROM ULAB_EDU.BOOK WHERE ID = ?";
         jdbcTemplate.update(
                 connection -> {
                     PreparedStatement ps = connection.prepareStatement(DELETE_SQL);
@@ -120,7 +123,7 @@ public class BookServiceImplTemplate implements BookService {
     public void deleteBooksByUserId(Long userId) {
         checkUserIdForNull(userId);
 
-        final String DELETE_SQL = "DELETE FROM BOOK WHERE USER_ID = ?";
+        final String DELETE_SQL = "DELETE FROM ULAB_EDU.BOOK WHERE PERSON_ID = ?";
         jdbcTemplate.update(
                 connection -> {
                     PreparedStatement ps = connection.prepareStatement(DELETE_SQL);

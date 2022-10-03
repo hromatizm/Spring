@@ -39,7 +39,8 @@ public class UserServiceImplJDBC implements UserService {
         try {
             connection = JdbcHelper.activateConnection();
 
-            final String INSERT_SQL = "INSERT INTO PERSON(FULL_NAME, TITLE, AGE) VALUES (?,?,?)";
+            final String INSERT_SQL = "INSERT INTO ULAB_EDU.PERSON(ID, FULL_NAME, TITLE, AGE) " +
+                    "VALUES (nextval('sequence'),?,?,?)";
             ps = connection.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, userDto.getFullName());
             ps.setString(2, userDto.getTitle());
@@ -48,7 +49,7 @@ public class UserServiceImplJDBC implements UserService {
 
             resultSet = ps.getGeneratedKeys();
             if (resultSet.next()) {
-                long userId = resultSet.getLong(1);
+                Long userId = resultSet.getLong(1);
                 userDto.setId(userId);
                 log.info("User id set: {}", userId);
             }
@@ -71,7 +72,7 @@ public class UserServiceImplJDBC implements UserService {
         try {
             connection = JdbcHelper.activateConnection();
 
-            final String UPDATE_SQL = "UPDATE PERSON SET FULL_NAME = ?, TITLE = ?, AGE = ?  WHERE ID = ?";
+            final String UPDATE_SQL = "UPDATE ULAB_EDU.PERSON SET FULL_NAME = ?, TITLE = ?, AGE = ?  WHERE ID = ?";
             ps = connection.prepareStatement(UPDATE_SQL);
             ps.setString(1, userDto.getFullName());
             ps.setString(2, userDto.getTitle());
@@ -104,7 +105,7 @@ public class UserServiceImplJDBC implements UserService {
         try {
             connection = JdbcHelper.activateConnection();
 
-            final String SELECT_SQL = "SELECT FULL_NAME, TITLE, AGE FROM PERSON WHERE ID = ?";
+            final String SELECT_SQL = "SELECT FULL_NAME, TITLE, AGE FROM ULAB_EDU.PERSON WHERE ID = ?";
             ps = connection.prepareStatement(SELECT_SQL);
             ps.setLong(1, userId);
 
@@ -140,7 +141,7 @@ public class UserServiceImplJDBC implements UserService {
         try {
             connection = JdbcHelper.activateConnection();
 
-            final String DELETE_SQL = "DELETE FROM PERSON WHERE ID = ?";
+            final String DELETE_SQL = "DELETE FROM ULAB_EDU.PERSON WHERE ID = ?";
             ps = connection.prepareStatement(DELETE_SQL);
             ps.setLong(1, userId);
             ps.executeUpdate();

@@ -4,6 +4,8 @@ import com.edu.ulab.app.exception.*;
 import com.edu.ulab.app.web.response.BaseWebResponse;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -45,9 +47,16 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler({JDBCConnectionException.class})
-    public  ResponseEntity<?> handleWrongBookException(@NonNull final JDBCConnectionException exc, WebRequest request) {
+    public  ResponseEntity<?> handleJDBCConnectionException(@NonNull final JDBCConnectionException exc, WebRequest request) {
         return new ResponseEntity<>(basicActions(
                 request, "Internal database error", exc.getMessage()),
+                HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler({SQLException.class})
+    public  ResponseEntity<?> handleSQLException(@NonNull final SQLException exc, WebRequest request) {
+        return new ResponseEntity<>(basicActions(
+                request, exc.getMessage(), exc.getSQLState()),
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -56,5 +65,4 @@ public class ControllerExceptionHandler {
                 ((ServletWebRequest) request).getRequest().getRequestURI(), debugMessage);
         return new ApiException(message, debugMessage);
     }
-
 }

@@ -13,7 +13,7 @@ public class RowToBookDtoMapper implements RowMapper<BookDto> {
     public BookDto mapRow(ResultSet rs, int rowNum) throws SQLException {
         BookDto bookDto = new BookDto();
         bookDto.setId(rs.getLong("id"));
-        bookDto.setUserId(rs.getLong("user_id"));
+        bookDto.setUserId(rs.getLong("person_id"));
         bookDto.setTitle(rs.getString("title"));
         bookDto.setAuthor(rs.getString("author"));
         bookDto.setPageCount(rs.getLong("page_count"));

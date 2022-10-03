@@ -4,6 +4,7 @@ import com.edu.ulab.app.dto.UserDto;
 import com.edu.ulab.app.exception.NotFoundException;
 import com.edu.ulab.app.mapper.RowToUserDtoMapper;
 import com.edu.ulab.app.service.UserService;
+import com.edu.ulab.app.util.GeneratedKeyHolderFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -22,17 +23,20 @@ import java.util.Objects;
 @Service
 public class UserServiceImplTemplate implements UserService {
     private final JdbcTemplate jdbcTemplate;
+    private final GeneratedKeyHolderFactory keyHolderFactory;
 
-    public UserServiceImplTemplate(JdbcTemplate jdbcTemplate) {
+    public UserServiceImplTemplate(JdbcTemplate jdbcTemplate, GeneratedKeyHolderFactory keyHolderFactory) {
         this.jdbcTemplate = jdbcTemplate;
+        this.keyHolderFactory = keyHolderFactory;
     }
 
     @Override
     public UserDto createUser(UserDto userDto) {
         checkUserDtoForNull(userDto);
 
-        final String INSERT_SQL = "INSERT INTO PERSON(FULL_NAME, TITLE, AGE) VALUES (?,?,?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+        final String INSERT_SQL = "INSERT INTO ULAB_EDU.PERSON(ID, FULL_NAME, TITLE, AGE) " +
+                "VALUES (nextval('sequence'),?,?,?)";
+        KeyHolder keyHolder = keyHolderFactory.newKeyHolder();
         jdbcTemplate.update(
                 connection -> {
                     PreparedStatement ps = connection.prepareStatement(INSERT_SQL, new String[]{"id"});
@@ -51,7 +55,7 @@ public class UserServiceImplTemplate implements UserService {
         checkUserIdForNull(userId);
         checkUserDtoForNull(userDto);
 
-        final String UPDATE_SQL = "UPDATE PERSON SET FULL_NAME = ?, TITLE = ?, AGE = ?  WHERE ID = ?";
+        final String UPDATE_SQL = "UPDATE ULAB_EDU.PERSON SET FULL_NAME = ?, TITLE = ?, AGE = ?  WHERE ID = ?";
         jdbcTemplate.update(
                 connection -> {
                     PreparedStatement ps = connection.prepareStatement(UPDATE_SQL);
@@ -70,7 +74,7 @@ public class UserServiceImplTemplate implements UserService {
     public UserDto getUserById(Long userId) {
         checkUserIdForNull(userId);
 
-        final String SELECT_SQL = "SELECT * FROM PERSON WHERE ID = ?";
+        final String SELECT_SQL = "SELECT * FROM ULAB_EDU.PERSON WHERE ID = ?";
         List<UserDto> userList = jdbcTemplate.query(
                 SELECT_SQL, preparedStatement -> preparedStatement.setLong(1, userId),
                 new RowToUserDtoMapper());
@@ -86,7 +90,7 @@ public class UserServiceImplTemplate implements UserService {
     public void deleteUserById(Long userId) {
         checkUserIdForNull(userId);
 
-        final String DELETE_SQL = "DELETE FROM PERSON WHERE ID = ?";
+        final String DELETE_SQL = "DELETE FROM ULAB_EDU.PERSON WHERE ID = ?";
         jdbcTemplate.update(
                 connection -> {
                     PreparedStatement ps = connection.prepareStatement(DELETE_SQL);

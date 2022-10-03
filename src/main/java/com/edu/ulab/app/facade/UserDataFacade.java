@@ -6,8 +6,7 @@ import com.edu.ulab.app.mapper.BookMapper;
 import com.edu.ulab.app.mapper.UserMapper;
 import com.edu.ulab.app.service.BookService;
 import com.edu.ulab.app.service.UserService;
-import com.edu.ulab.app.service.impl.BookServiceImplJDBC;
-import com.edu.ulab.app.service.impl.UserServiceImplJDBC;
+import com.edu.ulab.app.service.impl.*;
 import com.edu.ulab.app.web.request.UserBookRequest;
 import com.edu.ulab.app.web.response.UserBookResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -24,8 +23,8 @@ public class UserDataFacade {
     private final UserMapper userMapper;
     private final BookMapper bookMapper;
 
-    public UserDataFacade(UserServiceImplJDBC userService,
-                          BookServiceImplJDBC bookService,
+    public UserDataFacade(UserServiceImplTemplate userService,
+                          BookServiceImplTemplate bookService,
                           UserMapper userMapper,
                           BookMapper bookMapper) {
         this.userService = userService;

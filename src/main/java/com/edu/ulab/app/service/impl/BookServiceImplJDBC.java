@@ -40,7 +40,9 @@ public class BookServiceImplJDBC implements BookService {
         try {
             connection = JdbcHelper.activateConnection();
 
-            final String INSERT_SQL = "INSERT INTO BOOK(TITLE, AUTHOR, PAGE_COUNT, USER_ID) VALUES (?,?,?,?)";
+            final String INSERT_SQL =
+                    "INSERT INTO ULAB_EDU.BOOK(ID, TITLE, AUTHOR, PAGE_COUNT, PERSON_ID) " +
+                            "VALUES (nextval('sequence'),?,?,?,?)";
             ps = connection.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, bookDto.getTitle());
             ps.setString(2, bookDto.getAuthor());
@@ -73,7 +75,7 @@ public class BookServiceImplJDBC implements BookService {
         try {
             connection = JdbcHelper.activateConnection();
 
-            final String UPDATE_SQL = "UPDATE BOOK SET TITLE = ?, AUTHOR = ?, PAGE_COUNT = ?  WHERE ID = ?";
+            final String UPDATE_SQL = "UPDATE ULAB_EDU.BOOK SET TITLE = ?, AUTHOR = ?, PAGE_COUNT = ?  WHERE ID = ?";
             ps = connection.prepareStatement(UPDATE_SQL);
             ps.setString(1, bookDto.getTitle());
             ps.setString(2, bookDto.getAuthor());
@@ -107,7 +109,7 @@ public class BookServiceImplJDBC implements BookService {
             connection = JdbcHelper.activateConnection();
 
             final String SELECT_SQL =
-                    "SELECT USER_ID, TITLE, AUTHOR, PAGE_COUNT FROM BOOK WHERE ID = ?";
+                    "SELECT PERSON_ID, TITLE, AUTHOR, PAGE_COUNT FROM ULAB_EDU.BOOK WHERE ID = ?";
             ps = connection.prepareStatement(SELECT_SQL);
             ps.setLong(1, bookId);
 
@@ -149,7 +151,7 @@ public class BookServiceImplJDBC implements BookService {
             connection = JdbcHelper.activateConnection();
 
             final String SELECT_SQL =
-                    "SELECT ID, TITLE, AUTHOR, PAGE_COUNT FROM BOOK WHERE USER_ID = ?";
+                    "SELECT ID, TITLE, AUTHOR, PAGE_COUNT FROM ULAB_EDU.BOOK WHERE PERSON_ID = ?";
             ps = connection.prepareStatement(SELECT_SQL);
             ps.setLong(1, userId);
 
@@ -188,7 +190,7 @@ public class BookServiceImplJDBC implements BookService {
         try {
             connection = JdbcHelper.activateConnection();
 
-            final String DELETE_SQL = "DELETE FROM BOOK WHERE ID = ?";
+            final String DELETE_SQL = "DELETE FROM ULAB_EDU.BOOK WHERE ID = ?";
             ps = connection.prepareStatement(DELETE_SQL);
             ps.setLong(1, bookId);
             ps.executeUpdate();
@@ -211,7 +213,7 @@ public class BookServiceImplJDBC implements BookService {
         try {
             connection = JdbcHelper.activateConnection();
 
-            final String DELETE_SQL = "DELETE FROM BOOK WHERE USER_ID = ?";
+            final String DELETE_SQL = "DELETE FROM ULAB_EDU.BOOK WHERE PERSON_ID = ?";
             ps = connection.prepareStatement(DELETE_SQL);
             ps.setLong(1, userId);
             ps.executeUpdate();

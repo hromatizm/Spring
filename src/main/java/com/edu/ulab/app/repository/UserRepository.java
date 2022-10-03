@@ -1,12 +1,14 @@
 package com.edu.ulab.app.repository;
 
 import com.edu.ulab.app.entity.Person;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 
+import java.util.List;
 import java.util.Optional;
 
-public interface UserRepository extends CrudRepository<Person, Long> {
+public interface UserRepository extends JpaRepository<Person, Long> {
 
     /*
     User has books - book - started - comited status - other logic
@@ -16,4 +18,7 @@ public interface UserRepository extends CrudRepository<Person, Long> {
 
     @Query("select p from Person p where p.id = :id")
     Optional<Person> findByIdForUpdate(long id);
+
+    @NotNull List<Person> findAll();
+
 }

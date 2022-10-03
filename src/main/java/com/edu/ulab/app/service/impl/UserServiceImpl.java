@@ -25,9 +25,6 @@ public class UserServiceImpl implements UserService {
         this.userMapper = userMapper;
     }
 
-    /**
-     * Also checks username on max length.
-     */
     @Override
     public UserDto createUser(UserDto userDto) {
         checkUserDtoForNull(userDto);
@@ -41,7 +38,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Mapper is used for entity updating.
-     * Also checks username on max length.
      */
     @Override
     public UserDto updateUser(UserDto userDto, Long userId) {
