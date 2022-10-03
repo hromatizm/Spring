@@ -81,7 +81,7 @@ public class BookServiceImpl implements BookService {
         checkUserIdForNull(userId);
 
         List<BookDto> bookList = bookRepository
-                .findBooksByUserId(userId)
+                .findBooksByPersonId(userId)
                 .stream()
                 .filter(Objects::nonNull)
                 .map(bookMapper::bookToBookDto)
@@ -105,7 +105,7 @@ public class BookServiceImpl implements BookService {
     public void deleteBooksByUserId(Long userId) {
         checkUserIdForNull(userId);
         List<BookDto> bookList = getBooksByUserId(userId);
-        bookRepository.deleteBooksByUserId(userId);
+        bookRepository.deleteBooksByPersonId(userId);
         log.info("Books deleted: {}", bookList);
     }
 }

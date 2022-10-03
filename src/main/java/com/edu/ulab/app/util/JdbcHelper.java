@@ -4,9 +4,7 @@ import com.edu.ulab.app.exception.JDBCConnectionException;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 /**
  * For use with JDBC
@@ -17,7 +15,7 @@ public class JdbcHelper {
 
     public void activateDriver() {
         try {
-            Class.forName("org.h2.Driver");
+            Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException exc) {
             log.info(exc.getMessage());
         }
@@ -25,15 +23,15 @@ public class JdbcHelper {
 
     public Connection activateConnection() {
         try {
-            return DriverManager.getConnection("jdbc:h2:mem:userbook", "test", "test");
+            return DriverManager.getConnection("jdbc:postgresql://localhost:5432/mpl_ulab_db", "test", "test");
         } catch (SQLException exc) {
             handleSqlException(exc);
         }
         throw new JDBCConnectionException("Can't establish database connection");
     }
 
-    public void handleSqlException(SQLException exc){
-        while(exc != null) {
+    public void handleSqlException(SQLException exc) {
+        while (exc != null) {
             log.info("SQLException message: {}", exc.getMessage());
             log.info("Error code: {}", exc.getErrorCode());
             log.info("SQL state: {}", exc.getSQLState());
@@ -56,6 +54,7 @@ public class JdbcHelper {
         closeResource(ac1);
         closeResource(ac2);
     }
+
     public void closeAll(AutoCloseable ac1, AutoCloseable ac2, AutoCloseable ac3) {
         closeResource(ac1);
         closeResource(ac2);

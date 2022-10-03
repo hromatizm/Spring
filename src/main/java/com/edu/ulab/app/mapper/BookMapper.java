@@ -14,11 +14,13 @@ public interface BookMapper {
 
     BookRequest bookDtoToBookRequest(BookDto bookDto);
 
+    @Mapping(source = "userId", target = "personId")
     Book bookDtoToBook(BookDto bookDto);
 
+    @Mapping(source = "personId", target = "userId")
     BookDto bookToBookDto(Book book);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "userId", ignore = true)
+    @Mapping(target = "personId", ignore = true)
     Book updateBook(Book update, @MappingTarget Book target);
 }

@@ -26,7 +26,7 @@ public class BookDataFacade {
     private final BookService bookService;
     private final BookMapper bookMapper;
 
-    public BookDataFacade(BookServiceImplJDBC bookService, BookMapper bookMapper) {
+    public BookDataFacade(BookServiceImplTemplate bookService, BookMapper bookMapper) {
         this.bookService = bookService;
         this.bookMapper = bookMapper;
     }
